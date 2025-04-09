@@ -2,6 +2,7 @@ var conn = require('../inc/db')
 var express = require('express');
 var menus = require('../inc/menus')
 var reservations = require('../inc/reservations')
+var contacts = require('../inc/contacts')
 var router = express.Router();
 
 /* GET home page. */
@@ -21,11 +22,32 @@ router.get('/', function(req, res, next) {
 
 router.get('/contacts', function(req, res, next){
 
-  res.render('contacts', {
-    title: 'Contato - Restaurante Saboroso!',
-    background: 'images/img_bg_3.jpg',
-    h1: 'Sorriam e acenem rapazes'
-  });
+  contacts.render(req, res);
+
+});
+
+router.post('/contacts', function(req, res, next){
+
+  if (!req.body.name) {
+    contacts.render(req, res, "Qual teu vulgo pae?");
+  } else if (!req.body.email) {
+    contacts.render(req, res, "Passa pra nois teu e-mail");
+  } else if (!req.body.message) {
+    contacts.render(req, res, "Passa a visão");
+  } else {
+    contacts.save(req.body).then(results => {
+
+      req.body = {};
+
+      contacts.render(req, res, null, "Valeu irmão, vamo pega a visão!");
+
+    }).catch(err => {
+
+      contacts.render(req, res, err.message);
+
+    })
+
+  }
 
 });
 
