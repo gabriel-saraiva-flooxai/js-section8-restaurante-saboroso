@@ -170,6 +170,35 @@ formUpdate.save().then(json => {
   console.log(err);
 });
 
+[...document.querySelectorAll('.btn-delete')].forEach(btn => {
+
+  btn.addEventListener('click', e => {
+
+    let tr = e.target.closest('tr');
+
+      if (!tr) {
+        console.error("Não foi possível encontrar a linha (tr) do botão clicado.");
+        return;
+      }
+
+      let data = JSON.parse(tr.dataset.row);
+
+      if (confirm(`Deseja realmente excluir o menu ${data.title}?`)) {
+
+      fetch(`/admin/menus/${data.id}`, {
+        method: 'DELETE'
+      })
+        .then(response => response.json())
+        .then(json => {
+
+          window.location.reload();
+          
+        });
+      }
+  });
+
+});
+
 [...document.querySelectorAll('.btn-update')].forEach(btn => {
 
   btn.addEventListener('click', e => {
