@@ -146,6 +146,18 @@ router.post("/reservations", function(req, res, next){
 
 });
 
+router.post("/users/password-change", function(req, res, next){
+
+    users.changePassword(req).then(results => {
+        res.send(results);
+    }).catch(err => {
+        res.send({
+            error: err
+        });
+    });
+
+});
+
 router.delete("/reservations/:id", function(req, res, next){
 
     reservations.delete(req.params.id).then(results => {
@@ -158,7 +170,33 @@ router.delete("/reservations/:id", function(req, res, next){
 
 router.get("/users", function(req, res, next){
 
-    res.render("admin/users", admin.getParams(req));
+    users.getUsers().then(data => {
+
+        res.render("admin/users", admin.getParams(req, {
+            data
+        }));
+
+    });
+
+});
+
+router.post("/users", function(req, res, next){
+
+    users.save(req.fields).then(results => {
+        res.send(results);
+    }).catch(err => {
+        res.send(err);
+    });
+
+});
+
+router.delete("/users/:id", function(req, res, next){
+
+    users.delete(req.params.id).then(results => {
+        res.send(results);
+    }).catch(err => {
+        res.send(err);
+    });
 
 });
 
